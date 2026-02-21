@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Bookwalker Discount Badge",
+  "name": "BW Deals",
   "version": "1.0.0",
   "description": "Displays color-coded discount percentage badges on Bookwalker Taiwan wishlist pages.",
   "content_scripts": [

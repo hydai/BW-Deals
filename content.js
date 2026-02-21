@@ -177,6 +177,56 @@
   }
 
   // ---------------------------------------------------------------------------
+  // MutationObserver for dynamically loaded book entries
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Given a list of added nodes from a MutationRecord, find and process any
+   * bw_buy_* containers within them (or the nodes themselves if they match).
+   */
+  function processAddedNodes(addedNodes) {
+    addedNodes.forEach(function (node) {
+      // Only inspect element nodes; skip text nodes, comments, etc.
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+
+      // Check if the added node itself is a bw_buy_* container.
+      if (node.id && node.id.startsWith('bw_buy_')) {
+        processContainer(node);
+      }
+
+      // Also check descendants of the added node.
+      const descendants = node.querySelectorAll('div[id^="bw_buy_"]');
+      descendants.forEach(processContainer);
+    });
+  }
+
+  /**
+   * Set up a MutationObserver on document.body to handle lazily-loaded
+   * book entries (infinite scroll / dynamic content injection).
+   *
+   * The observer is disconnected when the page is about to unload so that
+   * we do not keep the callback alive after navigation.
+   */
+  function observeDynamicContent() {
+    const observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        if (mutation.addedNodes.length > 0) {
+          processAddedNodes(mutation.addedNodes);
+        }
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Disconnect on page unload to avoid dangling callbacks.
+    window.addEventListener('pagehide', function () {
+      observer.disconnect();
+    }, { once: true });
+
+    return observer;
+  }
+
+  // ---------------------------------------------------------------------------
   // Entry point
   // ---------------------------------------------------------------------------
 
@@ -187,4 +237,7 @@
 
   // Initial pass over the existing DOM.
   processAllContainers();
+
+  // Watch for dynamically added book entries (lazy loading / infinite scroll).
+  observeDynamicContent();
 })();

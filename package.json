@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {
+  "devDependencies": {
     "jsdom": "^28.1.0"
   }
 }

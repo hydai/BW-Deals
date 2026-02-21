@@ -58,4 +58,4 @@ package.json    — Dev dependencies
 
 ## License
 
-ISC
+[MIT](LICENSE)

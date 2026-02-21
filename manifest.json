@@ -3,6 +3,11 @@
   "name": "BW Deals",
   "version": "1.0.0",
   "description": "Displays color-coded discount percentage badges on Bookwalker Taiwan wishlist pages.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "content_scripts": [
     {
       "matches": ["*://*.bookwalker.com.tw/*"],
